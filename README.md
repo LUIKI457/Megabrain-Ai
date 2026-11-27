@@ -2,6 +2,28 @@
 
 Assistente web mobile-first, sem ESP32 e sem dependência obrigatória de serviços pagos.
 
+## Build 0.5
+- Conexão opcional com IA generativa via endpoint HTTPS configurável no botão **IA ONLINE**.
+- O endpoint recebe `POST` JSON com `message` e um histórico curto (`history`). A resposta deve ser JSON com `reply` em texto (também aceita `response` ou `output_text`).
+- A URL fica salva no armazenamento local do aparelho. O frontend não recebe nem armazena chaves de API.
+- Comandos locais têm prioridade; só mensagens não reconhecidas seguem para a IA online. Se a rede ou o servidor falhar, os comandos locais continuam disponíveis.
+- Requisição com timeout de 18 segundos e histórico limitado a 13 mensagens, com conteúdo truncado. Notas privadas não são enviadas.
+
+## Contrato mínimo do backend
+`POST /api/chat` com `Content-Type: application/json`:
+
+```json
+{
+  "message": "Explique uma função JavaScript",
+  "history": [
+    {"role": "user", "content": "Oi"},
+    {"role": "assistant", "content": "Olá!"}
+  ]
+}
+```
+
+Resposta esperada: `{"reply":"Texto da resposta"}`. O backend deve validar entradas, aplicar limites de tamanho e frequência, manter a chave do provedor apenas em variável de ambiente/secret e configurar CORS para a origem do site. Não habilite CORS para qualquer origem em produção.
+
 ## Build 0.4
 - Avatar composto **somente por dois olhos**: sem cabeça, corpo, boca, antena ou orelhas.
 - Olhos animados com piscadas, estados de escuta e processamento, e pupilas que acompanham o ponteiro/toque.
