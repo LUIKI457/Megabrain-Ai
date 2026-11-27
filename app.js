@@ -6,7 +6,7 @@ const STORE='megabrain.v2';
 let history=[], notes=[], recognition=null, listening=false;
 const load=()=>{try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');history=Array.isArray(x.history)?x.history.slice(-80):[];notes=Array.isArray(x.notes)?x.notes:[];if(x.theme==='light')document.body.classList.add('light')}catch{}};
 const save=()=>{try{localStorage.setItem(STORE,JSON.stringify({history:history.slice(-80),notes,theme:document.body.classList.contains('light')?'light':'dark'}))}catch{setMood('sleep','Armazenamento local indisponível.')}};
-function setMood(mode,label){robot.className='robot '+mode;mood.textContent=label}
+function setMood(mode,label){robot.className='eyes-only '+mode;mood.textContent=label}
 function add(text,who,store=true){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight;if(store){history.push({text,who,at:Date.now()});history=history.slice(-80);save()}}
 function speak(text){add(text,'bot');if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=1;u.pitch=1;speechSynthesis.speak(u)}}
 function open(url){window.open(url,'_blank','noopener,noreferrer')}
