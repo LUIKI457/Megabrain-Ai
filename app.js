@@ -2,11 +2,11 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const robot=$('robot'), mood=$('mood'), status=$('status'), messages=$('messages'), input=$('input'), mic=$('mic');
-const STORE='megabrain.v2';
+const STORE='megabrain.v3';
 let history=[], notes=[], recognition=null, listening=false;
 const load=()=>{try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');history=Array.isArray(x.history)?x.history.slice(-80):[];notes=Array.isArray(x.notes)?x.notes:[];if(x.theme==='light')document.body.classList.add('light')}catch{}};
 const save=()=>{try{localStorage.setItem(STORE,JSON.stringify({history:history.slice(-80),notes,theme:document.body.classList.contains('light')?'light':'dark'}))}catch{setMood('sleep','Armazenamento local indisponível.')}};
-function setMood(mode,label){robot.className='eyes-only '+mode;mood.textContent=label}
+function setMood(mode,label){robot.className='eyes-only '+mode;mood.textContent=label}\ndocument.addEventListener('pointermove',e=>{const r=robot.getBoundingClientRect();const dx=(e.clientX-(r.left+r.width/2))/(r.width/2);const dy=(e.clientY-(r.top+r.height/2))/(r.height/2);robot.style.setProperty('--look-x',(Math.max(-1,Math.min(1,dx))*8)+'px');robot.style.setProperty('--look-y',(Math.max(-1,Math.min(1,dy))*6)+'px')},{passive:true});document.addEventListener('pointerleave',()=>{robot.style.setProperty('--look-x','0px');robot.style.setProperty('--look-y','0px')});
 function add(text,who,store=true){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight;if(store){history.push({text,who,at:Date.now()});history=history.slice(-80);save()}}
 function speak(text){add(text,'bot');if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=1;u.pitch=1;speechSynthesis.speak(u)}}
 function open(url){window.open(url,'_blank','noopener,noreferrer')}
