@@ -22,6 +22,22 @@ header{display:flex;align-items:center;justify-content:space-between;gap:10px}.b
 .eyes-only.thinking .eye{animation:think .65s infinite alternate}
 .eyes-only.sleep .eye{height:5px;border-radius:50%;box-shadow:0 0 12px #4adfff77}
 .eyes-only.sleep .eye:before,.eyes-only.sleep .eye:after{display:none}
+/* Reações expressivas feitas apenas com os dois olhos */
+.eyes-only.happy .eye{height:48px;border-radius:50% 50% 46% 46%;transform:rotate(-7deg);animation:happyPulse .55s ease-in-out 2 alternate}
+.eyes-only.happy .eye:last-child{transform:rotate(7deg)}
+.eyes-only.excited{animation:excitedBounce .48s ease-in-out 2}
+.eyes-only.excited .eye{height:94px;width:72px;animation:excitedGlow .65s ease-in-out infinite alternate}
+.eyes-only.curious .eye:first-child{transform:rotate(-9deg) scaleY(.88)}
+.eyes-only.curious .eye:last-child{transform:rotate(9deg) scaleY(1.08)}
+.eyes-only.oops .eye{animation:oops .35s ease-in-out 2}
+.eyes-only.oops .eye:after{transform:translate(-50%,-50%) scale(.72)}
+.eyes-only.listening{animation:listenPulse 1.1s ease-in-out infinite}
+.eyes-only.thinking .eye{animation:think .65s infinite alternate}
+@keyframes happyPulse{to{transform:translateY(-4px) scaleY(.82)}}
+@keyframes excitedBounce{0%,100%{transform:translateY(0) scale(1)}45%{transform:translateY(-12px) scale(1.06)}}
+@keyframes excitedGlow{to{box-shadow:0 0 30px #4adfff,0 0 75px #20bfff77}}
+@keyframes oops{25%{transform:translateX(-5px) rotate(-5deg)}75%{transform:translateX(5px) rotate(5deg)}}
+@keyframes listenPulse{50%{filter:brightness(1.3)}}
 @keyframes eyesFloat{50%{transform:translateY(-5px)}}
 @keyframes blink{0%,44%,47%,100%{transform:scaleY(1)}45%,46%{transform:scaleY(.06)}}
 @keyframes think{to{transform:translateY(5px) scaleY(.92)}}
@@ -38,5 +54,5 @@ body.light{color-scheme:light;--bg:#eaf4fa;--panel:#fff;--panel2:#e5f1f8;--line:
 <button class="mic" id="mic">🎙 &nbsp; TOCAR PARA FALAR</button>
 <div class="tools"><button id="ai-config">⚙ IA ONLINE</button><button id="export">⇩ EXPORTAR CHAT</button><button id="clear">⌫ LIMPAR CHAT</button><button id="theme">◐ TEMA</button></div>
 <details class="help"><summary>O QUE O MEGABRAIN JÁ CONSEGUE FAZER</summary><p><b>Voz:</b> ouvir comandos e responder falando (se o navegador permitir).<br><b>Memória:</b> guardar notas e histórico neste aparelho.<br><b>Comandos:</b> hora, data, bateria, tema, tela cheia, pesquisar na web, abrir sites, calculadora simples, notas e leitura da conversa.<br><b>Limite honesto:</b> ainda não há um modelo de linguagem conectado. Sem API, ele executa comandos locais e não finge ser um chatbot generativo.</p></details>
-<div class="foot">MEGABRAIN AI • BUILD 0.4 • EYES-ONLY • GAZE • LOCAL-FIRST</div>
+<div class="foot">MEGABRAIN AI • BUILD 0.6 • EYES-ONLY • EXPRESSIONS • LOCAL-FIRST</div>
 </main><script src="./app.js" defer></script></body></html>
