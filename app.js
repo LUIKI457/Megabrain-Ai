@@ -6,10 +6,10 @@ const STORE='megabrain.v3';
 let history=[], notes=[], recognition=null, listening=false, aiEndpoint='';
 const load=()=>{try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');history=Array.isArray(x.history)?x.history.slice(-80):[];notes=Array.isArray(x.notes)?x.notes:[];aiEndpoint=typeof x.aiEndpoint==='string'?x.aiEndpoint:'';if(x.theme==='light')document.body.classList.add('light')}catch{}};
 const save=()=>{try{localStorage.setItem(STORE,JSON.stringify({history:history.slice(-80),notes,aiEndpoint,theme:document.body.classList.contains('light')?'light':'dark'}))}catch{setMood('sleep','Armazenamento local indisponível.')}};
-function setMood(mode,label){robot.className='eyes-only '+mode;mood.textContent=label}
+function setMood(mode,label){robot.className='eyes-only '+mode;mood.textContent=label}\nfunction react(mode,label){setMood(mode,label);if(mode!=='listening'&&mode!=='thinking')window.setTimeout(()=>{if(!listening&&robot.className==='eyes-only '+mode)setMood('','Núcleo local pronto.')},1350)}
 document.addEventListener('pointermove',e=>{const r=robot.getBoundingClientRect();const dx=(e.clientX-(r.left+r.width/2))/(r.width/2);const dy=(e.clientY-(r.top+r.height/2))/(r.height/2);robot.style.setProperty('--look-x',(Math.max(-1,Math.min(1,dx))*8)+'px');robot.style.setProperty('--look-y',(Math.max(-1,Math.min(1,dy))*6)+'px')},{passive:true});document.addEventListener('pointerleave',()=>{robot.style.setProperty('--look-x','0px');robot.style.setProperty('--look-y','0px')});
 function add(text,who,store=true){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight;if(store){history.push({text,who,at:Date.now()});history=history.slice(-80);save()}}
-function speak(text){add(text,'bot');if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=1;u.pitch=1;speechSynthesis.speak(u)}}
+function speak(text){const s=String(text).toLowerCase();const moodMode=/não consegui|indisponível|inválid|erro|não encontrei|bloqueou/.test(s)?'oops':/olá|oi!|pronto|anotado|ativado|abrindo|resultado é|conectada/.test(s)?'happy':/excelente|consegui|sucesso|perfeito|feito/.test(s)?'excited':'happy';react(moodMode,'Respondendo…');add(text,'bot');if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=1;u.pitch=1;speechSynthesis.speak(u)}}
 function open(url){window.open(url,'_blank','noopener,noreferrer')}
 function fmtTime(){return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
 function showNotes(){return notes.length?notes.map((n,i)=>(i+1)+'. '+n).join('\n'):'Sua memória ainda está vazia. Diga “anote: ...” para guardar alguma coisa.'}
@@ -41,7 +41,7 @@ const q=t.match(/^(pesquisar|pesquise|buscar|procure)( por)?\s+(.+)/i);if(q){spe
 if(s.includes('comandos')||s==='ajuda'){speak('Posso informar hora e data, consultar bateria quando disponível, calcular contas simples, guardar e listar notas, mudar o tema, abrir sites, pesquisar na web, ativar tela cheia e ler a conversa.');return}
 if(s.includes('quem é você')||s.includes('quem e voce')){speak('Sou o MegaBrain. Neste build, meu núcleo é local: memória, voz e comandos. Ainda não tenho um modelo generativo conectado, então não vou inventar respostas.');return}
 askRemote(t);}
-function send(text){const v=(text||'').trim();if(!v)return;add(v,'user');input.value='';reply(v)}
+function send(text){const v=(text||'').trim();if(!v)return;react('curious','Pensando no que você pediu…');add(v,'user');input.value='';reply(v)}
 $('form').addEventListener('submit',e=>{e.preventDefault();send(input.value)});
 document.querySelectorAll('[data-prompt]').forEach(b=>b.addEventListener('click',()=>send(b.dataset.prompt)));
 $('full').addEventListener('click',()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});else document.exitFullscreen?.()});
